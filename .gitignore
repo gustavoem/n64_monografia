@@ -1,0 +1,10 @@
+## Latex auxiliar files
+*.aux
+*.log
+*.lof
+*.out
+
+
+## vim files
+*.swp
+*.swo
