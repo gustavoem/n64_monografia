@@ -10,9 +10,11 @@
 \usepackage{indentfirst}
 \usepackage{float}       % needed for [H] figure placement option
 \usepackage{setspace}    % needed for doublespacing
+\usepackage{tikz}
 
 % Macros
 \renewcommand{\familydefault}{\sfdefault} % sans-serif
+\newcommand{\lowtext}[1]{$_{\text{#1}}$}
 
 
 \title{Arquitetura do Console Nintendo 64}
@@ -63,9 +65,140 @@ computer}.
     O processador VR4300 possuia uma arquitetura compatível com 
 instruções de 64 bits, apesar de grande parte das instruções do
 Nintendo 64 serem de apenas 32 bits. Especificamente nesse console, o
-processador da NEC trabalhava a uma frenquência de 93.75 MHz.
-\subsection{}
+processador da NEC trabalhava a uma frenquência de 93,75 MHz.
+\subsection{Formato de instrução}
+    Cada instrução do processador é formada por 32 bits, e elas podem
+ser separadas em três categorias: \emph{I-type}, \emph{J-Type} e 
+\emph{R-Type}. 
+
+    As intruções do tipo \emph{I-Type} são formadas por 5 bits, $op$,
+que determinam a operação; 5 bits em $rs$ e mais 5 em $rt$, que
+determinam os registradores que estão sendo operados; e mais 16 bits,
+{\em immediate}, que pode representar ou um enderço ou uma constante.
+Exemplos de instruções desse tipo são as instruções {\em load} e 
+{\em store}.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=latex, font=\sffamily, every node/.style = 
+     {minimum height = 1.5em, outer sep = 0pt, 
+     draw=black, fill = blue!20,semithick}]
+        \node [minimum width=2cm] 
+            at (0,0)    (A) {op};
+        \node [anchor=west, minimum width=2cm] 
+            at (A.east) (B) {rs};
+        \node [anchor=west, minimum width=2cm] 
+            at (B.east) (C) {rt};
+        \node [anchor=west, minimum width=6cm] 
+            at (C.east) (D) {immediate};
+        \node [draw=none, fill=none, anchor=west, 
+                xshift=2.5cm, yshift=0.75em] 
+            at (D.north) (D) {0};
+        \node [draw=none, fill=none, anchor=west, 
+                xshift=0.25cm, yshift=0.75em] 
+            at (C.north) (D) {16};
+        \node [draw=none, fill=none, anchor=west, 
+                xshift=0.25cm, yshift=0.75em] 
+            at (B.north) (D) {21};
+        \node [draw=none, fill=none, anchor=west,
+                xshift=0.25cm, yshift=0.75em] 
+            at (A.north) (D) {26};
+        \node [draw=none, fill=none, anchor=west,
+                xshift= -1.25cm, yshift=0.75em] 
+            at (A.north) (D) {31};
+\end{tikzpicture}
+\caption{Formato de uma instrução \em{I-Type}} 
+\label{fig:instr-itype}
+\end{figure}
+
+    As intruções do tipo {\em J-Type} são usadas para controlar o fluxo
+do programa. Para isso, esse tipo de instrução pode pular para um 
+pedaço específico do código por via de um {\em jump} ou um {\em branch}.
+Quando uma instrução do tipo {\em jump} é executada, o desvio sempre 
+acontece, ao contrário da instrução {\em branch} na qual é possível 
+determinar uma condição para o desvio. No VR4300 essas intruções são
+formadas por 5 bits, $op$, que determinam a operação; e mais 26 bits
+$target$, que determinam o endereço do possível desvio. Quando a 
+instrução é um desvio obrigatório, os 26 bits estão todos disponíveis
+para determinar o endereço de destino, mas no caso de um {\em branch}
+o valor de $target$ só pode determinar um {\em offset} de 16 bits 
+relativo ao registrador {\em PC}.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=latex, font=\sffamily, every node/.style = 
+     {minimum height = 1.5em, outer sep = 0pt, 
+     draw=black, fill = blue!20,semithick}]
+        \node [minimum width=2cm] 
+            at (0,0)    (A) {op};
+        \node [anchor=west, minimum width=10cm] 
+            at (A.east) (B) {target};
+        \node [draw=none, fill=none, anchor=west, 
+                xshift=4.75cm, yshift=0.75em] 
+            at (B.north) (B) {0};
+        \node [draw=none, fill=none, anchor=west, 
+                xshift=0.25cm, yshift=0.75em] 
+            at (A.north) (A) {26};
+\end{tikzpicture}
+\caption{Formato de uma instrução \em{J-Type}} \label{fig:instr-jtype}
+\end{figure}
+
+    As instruções do tipo {\em R-Type} envolvem apenas o uso de 
+registradores. Exemplos de instruções desse tipo são aquelas que
+fazem operações aritméticas entre dois registradores e guardam o 
+resultado em um terceiro registrador. Essas instruções são formadas
+por 5 bits $op$; 5 bits para cada um dos três registradores $rs$, $rt$
+e $rd$; 5 bits $sa$ que definem um {\em shift} para o resultado; e mais
+6 bits para $function$.
+
+\begin{table}[H]
+\centering
+\label{r-type-table}
+\begin{tabular}{|c|c|}
+\hline
+Code & Operation \\ \hline
+0  & Add \\
+1  & Subtract \\
+2  & Multiply \\
+3  & Divide \\
+4  & Square root \\
+5  & Absolute value \\
+6  & Transfer \\
+7  & Sign reverse \\
+8  & Convert to 64-bit fixed-point, rounded to nearest/even \\
+9  & Convert to 64-bit fixed-point, rounded toward zero \\
+10 & Convert to 64-bit fixed-point, rounded to + $\infty$ \\
+11 & Convert to 64-bit fixed-point, rounded to – $\infty$ \\
+12 & Convert to 32-bit fixed-point, rounded to nearest/even \\
+13 & Convert to 32-bit fixed-point, rounded toward zero \\
+14 & Convert to 32-bit fixed-point, rounded to + $\infty$ \\
+15 & Convert to 32-bit fixed-point, rounded to – $\infty$ \\
+16–31 & Reserved \\
+32 & Convert to single floating-point \\
+33 & Convert to double floating-point \\
+34 & Reserved \\
+35 & Reserved \\
+36 & Convert to 32-bit fixed-point \\
+37 & Convert to 64-bit fixed-point \\
+38–47 & Reserved \\
+8–63 & Floating-point compare \\
+\hline
+\end{tabular}
+\caption{Lista de todas as possíveis funções em uma instrução do tipo
+{\em R-Type} \cite{vr4300-datasheet}.}
+
+\end{table}
+
+
 \section{Chip SGI RCP}
+
+
+\pagebreak
+\begin{thebibliography}{1}
+\bibitem{vr4300-datasheet} 
+NEC V\lowtext{R}4300, V\lowtext{R}4305, V\lowtext{R}4310 64-bit 
+processor User's Manual 7$^{\text{th}}$ edition. Japan, 2000.
+\end{thebibliography}
 
 \end{document}
 
