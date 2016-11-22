@@ -16,6 +16,8 @@
 \renewcommand{\familydefault}{\sfdefault} % sans-serif
 \newcommand{\lowtext}[1]{$_{\text{#1}}$}
 
+% Adds ./figures/ to the path of figures
+\graphicspath{./figures/}
 
 \title{Arquitetura do Console Nintendo 64}
 \author{Antônio Augusto Abello, Gustavo Estrela de Matos, Lucas Romão
@@ -66,6 +68,14 @@ computer}.
 instruções de 64 bits, apesar de grande parte das instruções do
 Nintendo 64 serem de apenas 32 bits. Especificamente nesse console, o
 processador da NEC trabalhava a uma frenquência de 93,75 MHz.
+
+\begin{figure}
+  \centering
+    \includegraphics{figures/vr4300diagram}
+  \caption{Um diagrama com os principais componentes do processador 
+    VR4300}
+\end{figure}
+
 \subsection{Formato de instrução}
     Cada instrução do processador é formada por 32 bits, e elas podem
 ser separadas em três categorias: \emph{I-type}, \emph{J-Type} e 
