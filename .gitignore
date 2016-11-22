@@ -3,6 +3,8 @@
 *.log
 *.lof
 *.out
+*.toc
+
 
 
 ## vim files
