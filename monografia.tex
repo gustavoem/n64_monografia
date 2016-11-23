@@ -69,11 +69,74 @@ instruções de 64 bits, apesar de grande parte das instruções do
 Nintendo 64 serem de apenas 32 bits. Especificamente nesse console, o
 processador da NEC trabalhava a uma frenquência de 93,75 MHz.
 
-\begin{figure}
-  \centering
-    \includegraphics{figures/vr4300diagram}
-  \caption{Um diagrama com os principais componentes do processador 
-    VR4300}
+\subsection{Principais Componentes do Processador VR4300}
+    A figura \ref{fig:vr4300dia} mostra um diagrama com os principais
+componentes do processador VR4300 e como eles se comunicam. Nesta seção,
+discutiremos o papel de cada um desses componentes.
+\begin{itemize}
+    \item {\bf System interface} define a interface do chip com os
+componentes externos. Essa interface é formada por um bus de 32 bits
+e vários outros bits para controle de bits, interrupções, relógio, etc.
+No Nintendo  64, algum desses bits se conectam a memória RAM do console
+e, também diretamente ao cartucho com o jogo.
+    \item {\bf Clock generator} é responsável por determinar o clock
+interno do chip, que é o clock do pipeline do processador. Esse 
+componente recebe um clock externo e define o clock de pipeline como uma
+fração do anterior. Um dos modos de operação do VR4300 é ter o relógio 
+interno funcionando com 2 ciclos a cada ciclo do relógio externo.
+    \item {\bf Instruction cache} é um cache que guarda a instrução que
+está sendo executada. No contexto do pipeline, manter uma cópia da 
+instrução lida dentro do processador é essencial para aumentar 
+eficiência e permitir operações como desvios e interrupções.
+    \item {\bf Execution unit} é uma parte do hardware que é 
+especializada em realizar operações aritméticas. Na arquitetura MIPS,
+a {\em Execution unit} tem o papel de {\em COP1} (coprocessador 1).
+    \item {\bf CP0} é o componente responsável por fazer o controle da
+memória (MMU), isto é, permite enderaçemento virtual, controla o acesso
+a pedaços de memória diferentes, aloca páginas de memória e outras 
+funções. Para ajudar na eficiência de acesso a memória, o {\em} CP0 
+possui uma {\em TLB} ({\em Translation Lookaside Buffer}) que é, 
+basicamente, um cache para a tradução de endereços virtuais para 
+físicos.
+    \item {\bf Data cache} é um cache para dados da memória. Os dados 
+armazenados nesse componente são indexados pelos endereços virtuais.
+Podemos ver, no diagrama, uma conexão entre {\em Execution Unit} e esse 
+componente, essa ligação é utilizada quando um dado necessário em uma
+computação já está no cache. Quando isso acontece poupamos o trabalho
+de buscar dados na memória ou qualquer outro componente pois ele já
+está disponível dentro do chip.
+    \item {\bf Instruction address} tem o papel de calcular o endereço
+da próxima instrução. Esse circuito deve ser capaz de incrementar o
+{\em Program Counter}, dando sequência as execuções de instruções, e
+também deve ser capaz de atualizar o {\em Program Counter} quando
+ocorrem desvios ({\em branch} e {\em jump}).
+    \item {\bf Pipeline control} é o circuito que controla a execução
+do pipeline do processador. O conceito de pipeline consiste em dividir
+a execução de uma tarefa de maneira que mais de uma tarefa possa ser
+executada simultaneamente, desde que em diferentes etapas e não 
+dependentes. O pipeline do processador VR4300 consiste em cinco etapas
+diferentes:
+    \begin{itemize}
+        \item{IC (Instruction Cache Fetch):} faz a leitura da instrução.
+        \item{RF (Register Fetch):} deixa valores de registradores 
+prontos para serem usados em cálculos.
+        \item{EX (Execution):} executa operações aritméticas.
+        \item{DC (Data Cache Fetch):} armazena no cache os dados 
+utilizados na instrução.
+        \item{WB (Write Back):} atualiza valores na memória ou 
+registradores.
+    \end{itemize}
+O que ocorre em cada etapa do pipeline também depende muito da instrução
+que está sendo executada, portanto o que está descrito logo acima é uma
+visão superficial de cada uma dessas etapas.
+\end{itemize}
+
+\begin{figure}[H]
+    \label{fig:vr4300dia}
+    \centering
+        \includegraphics[scale=.65]{figures/vr4300diagram}
+    \caption{Um diagrama com os principais componentes do processador 
+        VR4300}
 \end{figure}
 
 \subsection{Formato de instrução}
