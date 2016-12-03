@@ -263,7 +263,25 @@ Code & Operation \\ \hline
 \end{table}
 
 
-\section{Chip SGI RCP}
+\section{Reality Coprocessor (RCP)}
+O chip RCP (Reality Coprocessor) é, na verdade, uma coleção de processadores, interfaces de memória e lógica de E/S
+Seus dois processadores são o RSP (Reality Signal Processor) e o RDP (Reality Display Processor). Ambos possuem responsabilidades parecidas (cuidam de partes distintas do processo de geração de imagem e o RSP cuida sozinho do áudio) e são separados para aumentar a performance do sistema ao realizar suas tarefas em paralelo.
+A parte de E/S coneceta o RCP com a CPU, os inputs, o cartucho e também possui saídas \textit{write-only} de áudio e vídeo. Essas conexões são necessárias porque a parte mais lógica do processamento de áudio e vídeo é feita pela CPU
+\subsection{RSP}
+\subsection{RDP}
+O RDP é um processador que se especializa na parte final de processamento de vídeo, possuindo diversos componentes para realizar essa tarefa. Recebe a maioria de suas informações e instruções do RSP, mas também ocasionalmente recebe instruções via código para alterar seu modo de execução. Conta ainda com uma memória específica para guardar texturas (TMEM) de 4KB e ao final de seu pipeline escreve na memória (na parte reservada ao \textit{framebuffer} os pixels prontos. Ele possui 6 blocos lógicos (que em hardware são implementados como vários blocos, mas agem como um só)
+\begin{itemize}
+    \item{Rasterizador (RS): rasteriza triângulos e retângulos}
+    \item{Unidade de Textura (TX): realiza \textit{sample} das texturas carregadas em TMEM}
+    \item{Unidade de Filtro de Textura (TF): filtra os \textit{samples} de textura}
+    \item{Combinador de Cor (CC): interpola e combina duas cores (por exemplo, da textura e da iluminação)}
+    \item{Blender (BL): mistura os pixels gerados com os pixels atuais no buffer (para transição), realiza operações relacionadas à profundidade (\textit{z-buffer}) para produzir o 3D e o \textit{anti-aliasing} (redução de serrilhados}
+    \item{Interface de Memória (MI): realiza as operações de leitura, escrita e modificação dos pixels um a um no \textit{framebuffer} (em 1 ou 0.5 pixel-por-clock). Também carrega a TMEM usando os endereços físicos e lê/escreve o \textit{z-buffer}}
+\end{itemize}
+
+\section{Interface de Vídeo}
+Ao final de todo o processamento da CPU, RSP, RDP, a interface de vídeo lê o \textit{framebuffer} e gera os sinais RGB, podendo trabalhar tanto em PAL ou NTSC. Ela ainda realiza um segundo passo do algoritmo \textit{anti-alias} e pode alterar a escala das imagens.
+O processamento de imagens, então, passa por quase todo hardware, começando na CPU, com a parte mais lógica, passando ao RSP com a geometria e terminando no RDP com a renderização, texturização e finalização
 
 
 \pagebreak
