@@ -54,7 +54,42 @@ Silva}
 \pagebreak
 
 \section{Introdução}
+
+O Nintendo64 se consiste dum conjunto de componentes de hardware que
+trabalham em conjunto para o processamento gŕafico e de áudio. O componente
+chave do sistema é o RCP, que será abordado nas próximas seções.
+A CPU e o RCP rodam concorrentemente; na CPU, os processos são rodados
+em \textit{threads} ao passo em que no RCP os processos são rodados em
+\textit{tasks}.
+
+Na CPU, os processos rodam no conjunto de \textit{threads} onde cada uma
+possui sua própria pilha de execução. Diferentemente dos sistemas UNIX,
+no console não existe o conceito de relógio de swap ou de
+\textit{round-robin} para o escalonamento, isto é, uma \textit{thread}
+que possui CPU não é interrompida, caso exista outra de mesma prioridade
+a CPU só será removida da mesma quando ela acabar sua execução ou caso
+outra \textit{thread} de maior prioridade.
+
+\begin{figure}[H]
+    \label{fig:block-diagram}
+    \centering
+        \includegraphics[scale=.65]{figures/nintendo64-diagram}
+    \caption{Diagrama de blocos do hardware do Nintendo 64}
+\end{figure}
+
+No aspecto do software, a camada é responsável pela tradução de
+funções lógicas e argumentos para as configurações específicas
+do hardware enquanto boa parte do gerenciamento dos recursos
+era deixada para os jogos, sendo as únicas camadas já fornecidas
+pelo console sendo de E/S e de áudio.
+
+Nas seções que seguem, será falado mais a fundo sobre os componentes do
+console e suas respectivas funções no processamento de um jogo.
+
 \section{Principais Componentes do Nintendo64}
+
+
+
 \section{Chip NEC VR4300}
     O chip NEC VR4300 é o principal processador no Nintendo64,
 responsável principalmente por processar a lógica dos jogos e, 
@@ -134,7 +169,7 @@ visão superficial de cada uma dessas etapas.
 \begin{figure}[H]
     \label{fig:vr4300dia}
     \centering
-        \includegraphics[scale=.65]{figures/vr4300diagram}
+       \includegraphics[scale=.65]{figures/vr4300diagram}
     \caption{Um diagrama com os principais componentes do processador 
         VR4300}
 \end{figure}
@@ -267,9 +302,20 @@ Code & Operation \\ \hline
 O chip RCP (Reality Coprocessor) é, na verdade, uma coleção de processadores, interfaces de memória e lógica de E/S
 Seus dois processadores são o RSP (Reality Signal Processor) e o RDP (Reality Display Processor). Ambos possuem responsabilidades parecidas (cuidam de partes distintas do processo de geração de imagem e o RSP cuida sozinho do áudio) e são separados para aumentar a performance do sistema ao realizar suas tarefas em paralelo.
 A parte de E/S coneceta o RCP com a CPU, os inputs, o cartucho e também possui saídas \textit{write-only} de áudio e vídeo. Essas conexões são necessárias porque a parte mais lógica do processamento de áudio e vídeo é feita pela CPU
+
+\begin{figure}[H]
+    \label{fig:rcpstructure}
+    \centering
+       \includegraphics[scale=.65]{figures/f03-02}
+    \caption{Um diagrama com os principais componentes do 
+        RCP}
+
+\end{figure}
+
+
 \subsection{RSP}
 
-O RSP (Reality Signal Processor) é um processador que se especializa na execução das transformações
+O RSP ( \textit{Reality Signal Processor} ) é um processador que se especializa na execução das transformações
 geométricas além de fornecer visibilidade para as funcionalidades do RCP.
 
 Outra função também realizada pelo RSP é executar a decodificação do áudio,
@@ -288,7 +334,7 @@ geométricas, novos efeitos além de otimizações para velocidade ou qualidade
 de processamento. Entretanto, o acesso ao $\mu$code só foi liberado pela
 Nintendo no final do ciclo de vida do console.
 
-\textbf{Unidades de processamento do RPS}
+\textbf{Unidades de processamento do RSP}
 
 \begin{itemize}
     \item Scalar Unity (SU): Usa um subconjunto de R4000 instruções parac execução
@@ -296,6 +342,8 @@ Nintendo no final do ciclo de vida do console.
     \item Instruction Memory (IMEM): Memória que armazena o microcódigo
     \item Data Memory (DMEM): Espaço de memória usado pelo microcódigo
 \end{itemize}
+
+
 
 
 \subsection{RDP}
