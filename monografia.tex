@@ -302,20 +302,18 @@ Code & Operation \\ \hline
 O chip RCP (Reality Coprocessor) é, na verdade, uma coleção de processadores, interfaces de memória e lógica de E/S
 Seus dois processadores são o RSP (Reality Signal Processor) e o RDP (Reality Display Processor). Ambos possuem responsabilidades parecidas (cuidam de partes distintas do processo de geração de imagem e o RSP cuida sozinho do áudio) e são separados para aumentar a performance do sistema ao realizar suas tarefas em paralelo.
 A parte de E/S coneceta o RCP com a CPU, os inputs, o cartucho e também possui saídas \textit{write-only} de áudio e vídeo. Essas conexões são necessárias porque a parte mais lógica do processamento de áudio e vídeo é feita pela CPU
+A figura abaixo mostra um esquema dos componentes do RCP.
 
-\begin{figure}[H]
-    \label{fig:rcpstructure}
-    \centering
-       \includegraphics[scale=.65]{figures/f03-02}
-    \caption{Um diagrama com os principais componentes do 
-        RCP}
-
+\begin{figure}{H}
+\centering
+        \includegraphics[scale=.65]{figures/RCP_general}
+    \caption{Um diagrama com os principais componentes do co-processador RCP}
 \end{figure}
-
 
 \subsection{RSP}
 
-O RSP ( \textit{Reality Signal Processor} ) é um processador que se especializa na execução das transformações
+O RSP ( \textit{Reality Signal Processor} ) é um processador que se 
+especializa na execução das transformações
 geométricas além de fornecer visibilidade para as funcionalidades do RCP.
 
 Outra função também realizada pelo RSP é executar a decodificação do áudio,
@@ -337,7 +335,7 @@ Nintendo no final do ciclo de vida do console.
 \textbf{Unidades de processamento do RSP}
 
 \begin{itemize}
-    \item Scalar Unity (SU): Usa um subconjunto de R4000 instruções parac execução
+    \item Scalar Unity (SU): Usa um subconjunto de R4000 instruções para execução
     \item Vector Unity (VU): possui mecanismos para operação soma-produto de 16 bits
     \item Instruction Memory (IMEM): Memória que armazena o microcódigo
     \item Data Memory (DMEM): Espaço de memória usado pelo microcódigo
@@ -361,12 +359,19 @@ O RDP é um processador que se especializa na parte final de processamento de v�
 Ao final de todo o processamento da CPU, RSP, RDP, a interface de vídeo lê o \textit{framebuffer} e gera os sinais RGB, podendo trabalhar tanto em PAL ou NTSC. Ela ainda realiza um segundo passo do algoritmo \textit{anti-alias} e pode alterar a escala das imagens.
 O processamento de imagens, então, passa por quase todo hardware, começando na CPU, com a parte mais lógica, passando ao RSP com a geometria e terminando no RDP com a renderização, texturização e finalização
 
+\begin{figure}[H]
+    \centering
+        \includegraphics{figures/Video_pipeline}
+    \caption{Esquema geral de processamento de vídeo}
+\end{figure}
+
 
 \pagebreak
 \begin{thebibliography}{1}
 \bibitem{vr4300-datasheet} 
 NEC V\lowtext{R}4300, V\lowtext{R}4305, V\lowtext{R}4310 64-bit 
 processor User's Manual 7$^{\text{th}}$ edition. Japan, 2000.
+\bibitem{thebibliography}Nintendo 64 Programming Manual. Digitalizado por Project Ultra 64. Acessível em: \url{http://level42.ca/projects/ultra64/Documentation/man/}
 \end{thebibliography}
 
 \end{document}
