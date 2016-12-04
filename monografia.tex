@@ -263,7 +263,38 @@ Code & Operation \\ \hline
 \end{table}
 
 
-\section{Chip SGI RCP}
+\section{Reality Coprocessor}
+
+\subsection{Reality Signal Processor}
+
+O RSP é um processador que se especializa na execução das transformações
+geométricas além de fornecer visibilidade para as funcionalidades do RCP.
+
+Outra função também realizada pelo RSP é executar a decodificação do áudio,
+apesar de este procedimento também poder ser feito pela CPU.
+Dentre os consoles da época, o Nintendo 64 era o único que não possuía um
+chip dedicado ao processamento de áudio, cabendo então ao programador
+decidir se o processamento do áudio seria feito na CPU ou no RSP.
+Por um lado, isso permitia que o sistema fosse flexível às necessidades de
+cada jogo, por outro lado, isso exigia que o programador soubesse usar
+corretamente as funcionalidades do console a fim de melhorar a performance
+do console.
+
+O RSP é totalmente reprogramável através do microcódigo ($\mu$code). Através
+deste, era possível adicionar novas funcionalidades, novas operações
+geométricas, novos efeitos além de otimizações para velocidade ou qualidade
+de processamento. Entretanto, o acesso ao $\mu$code só foi liberado pela
+Nintendo no final do ciclo de vida do console.
+
+\textbf{Unidades de processamento do RPS}
+
+\begin{itemize}
+    \item Scalar Unity (SU): Usa um subconjunto de R4000 instruções parac execução
+    \item Vector Unity (VU): possui mecanismos para operação soma-produto de 16 bits
+    \item Instruction Memory (IMEM): Memória que armazena o microcódigo
+    \item Data Memory (DMEM): Espaço de memória usado pelo microcódigo
+\end{itemize}
+
 
 
 \pagebreak
