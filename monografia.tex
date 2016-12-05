@@ -54,12 +54,13 @@ Silva}
 \pagebreak
 
 \section{Introdução}
+No seguinte trabalho buscamos explicar o funcionamento do console de Nintendo 64 do ponto de vista da Organização de Computadores. Queríamos também, como objetivo secundário, entender como esse funcionamento pode ser eventualmente emulado por software em outras arquiteturas e dispositivos.
+Para tanto fazemos primeiro uma exposição da arquitetura geral, seguida de outras sobre os principais componentes do dispositivo, visando sempre explicar sua integração e seu funcionamento no contexto mais geral. Ao fim temos uma parte sobre como se dá a emulação desses processos que funciona como conclusão do artigo. No fim do trabalho também se encontram as referências utilizadas na pesquisa.
+\section{Arquitetura Geral}
 
-O Nintendo64 se consiste dum conjunto de componentes de hardware que
+O Nintendo 64 consiste em um conjunto de componentes de hardware que
 trabalham em conjunto para o processamento gŕafico e de áudio. O componente
-chave do sistema é o RCP, que será abordado nas próximas seções.
-A CPU e o RCP rodam concorrentemente; na CPU, os processos são rodados
-em \textit{threads} ao passo em que no RCP os processos são rodados em
+chave do sistema é o RCP. A CPU e o RCP rodam concorrentemente; na CPU, os processos são rodados em \textit{threads} ao passo em que no RCP os processos são rodados em
 \textit{tasks}.
 
 Na CPU, os processos rodam no conjunto de \textit{threads} onde cada uma
@@ -77,11 +78,11 @@ outra \textit{thread} de maior prioridade.
     \caption{Diagrama de blocos do hardware do Nintendo 64}
 \end{figure}
 
-No aspecto do software, a camada é responsável pela tradução de
+No aspecto do software, o sistema operacional do Nintendo 64 é responsável pela tradução de
 funções lógicas e argumentos para as configurações específicas
-do hardware enquanto boa parte do gerenciamento dos recursos
-era deixada para os jogos, sendo as únicas camadas já fornecidas
-pelo console sendo de E/S e de áudio.
+do hardware, enquanto boa parte do gerenciamento dos recursos
+é deixada para os jogos. As únicas interfaces já fornecidas prontas
+pelo console são a de E/S e de áudio.
 
 Nas seções que seguem, será falado mais a fundo sobre os componentes do
 console e suas respectivas funções no processamento de um jogo.
