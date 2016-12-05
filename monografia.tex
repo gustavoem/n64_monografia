@@ -60,7 +60,7 @@ Para tanto fazemos primeiro uma exposição da arquitetura geral, seguida de out
 
 O Nintendo 64 consiste em um conjunto de componentes de hardware que
 trabalham em conjunto para o processamento gŕafico e de áudio. O componente
-chave do sistema é o RCP. A CPU e o RCP rodam concorrentemente; na CPU, os processos são rodados em \textit{threads} ao passo em que no RCP os processos são rodados em
+chave do sistema é o RCP, que faz a conexão com todos os outros componentes, a memória, e as entradas e saídas do sistema (Áudio, Vídeo, Input). A CPU e o RCP rodam concorrentemente; na CPU, os processos são rodados em \textit{threads} ao passo em que no RCP os processos são rodados em
 \textit{tasks}.
 
 Na CPU, os processos rodam no conjunto de \textit{threads} onde cada uma
@@ -372,6 +372,7 @@ A emulação da CPU é geralmente mais direta, implementando os componentes expl
 \item{Interpretador}: interpreta os comandos no momento em que são necessários
 \item{Recompilador dinâmico}: compila um bloco de comandos de cada vez, geralmente parando em um condicional.
 \item{Recompilador estático}: teóricamente seria possível usar a estratégia anterior para compilar o jogo inteiro de uma vez. No entanto isso é computacionalmente complicado e, em algumas instâncias corresponde ao problema de parada.
+\end{itemize}
 
 Diferentes problemas aparecem no contexto do desenvolvimento dos plugins. Aqui, a abstração do hardware real em uma emulação de alto nível é a norma. A razão disso é evidente para o caso do plugin de entrada e saída, por exemplo. Mas para o vídeo e áudio isso é devido à disponibilidade de bibliotecas como openGL e Direct3D, que podem concentrar o trabalho de processamento distribuído em várias etapas em uma só API. Isso simplifica o desenvolvimento e melhora a performance. No entanto também possui algumas desvantagens: o resultado final é um pouco menos fiel à saída original (geralmente mais “pontudo”) e jogos que utilizam microcódigo para alterar o funcionamento do RSP e do RDP não podem ser rodados. Existem também, então, plugins de vídeo e áudio que emulam o hardware inteiro, mas são raros e mais pesados de rodar.
 
@@ -379,7 +380,7 @@ Diferentes problemas aparecem no contexto do desenvolvimento dos plugins. Aqui, 
 O estudo do funcionamento de um console antigo e sua emulação em software podem parecer ter pouco valor além da nostalgia e da conservação de conhecimento e formas de entretenimento para o futuro (que por si só já são razões bem válidas). Isso não é verdade, pois ele pode ser usado para mostrar como funcionam diferentes arquiteturas de computadores, a importância de hardware especializado, técnicas de engenharia reversa. Também pode tocar em pontos complexos da teoria da computação, como no caso dos recompiladores e interpretadores. Por fim do ponto de vista da engenharia de software, mostra a importância da modularização e do software livre e aberto. O estudo então cumpre sua função didática, ao mobilizar diversos conhecimentos que já possuíamos e ao nos acrescentar novos conhecimentos.
 
 
-\end{itemize}
+
 
 
 
