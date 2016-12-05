@@ -363,13 +363,38 @@ O processamento de imagens, então, passa por quase todo hardware, começando na
     \caption{Esquema geral de processamento de vídeo}
 \end{figure}
 
+\section{Emulação}
+O processo de emulação do hardware do Nintendo 64 é relativamente simples.
+ Usando da capacidade de abstração provida pela programação orientada a objetos, pode-se modelar cada pedaço do hardware como um objeto ou uma estrutura (struct) e depois programar a interação entre eles como as ligações reais. Os projetos tendem também a ser altamente modularizados, sendo que em geral o emulador em si refere-se à emulação da CPU e os outros aspectos (RSP, RDP/Vídeo, Áudio, Controle) são adicionados como plug-ins programados por terceiros. 
+ 
+A emulação da CPU é geralmente mais direta, implementando os componentes explícitamente (até coisas como TLB, memória, etc). Isso é possível somente porque os computadores atuais são poderosos o suficiente e o Nintendo 64 é simples o suficiente para essa estratégia ser efetiva. Em tempos anteriores, com computadores menos potentes, uma estratégia de emulação mais abstrata (HLE - High Level Emulation) era utilizada: se implementava as chamadas que os jogos faziam como uma livraria em C\cite{HLE}.Para sistemas mais modernos e complexos, uma estratégia semelhante deve ser utilizada. Além disso, quanto à leitura, interpretação, e execução dos códigos três estratégias distintas podem ser utilizadas 
+\begin{itemize}
+\item{Interpretador}: interpreta os comandos no momento em que são necessários
+\item{Recompilador dinâmico}: compila um bloco de comandos de cada vez, geralmente parando em um condicional.
+\item{Recompilador estático}: teóricamente seria possível usar a estratégia anterior para compilar o jogo inteiro de uma vez. No entanto isso é computacionalmente complicado e, em algumas instâncias corresponde ao problema de parada.
+
+Diferentes problemas aparecem no contexto do desenvolvimento dos plugins. Aqui, a abstração do hardware real em uma emulação de alto nível é a norma. A razão disso é evidente para o caso do plugin de entrada e saída, por exemplo. Mas para o vídeo e áudio isso é devido à disponibilidade de bibliotecas como openGL e Direct3D, que podem concentrar o trabalho de processamento distribuído em várias etapas em uma só API. Isso simplifica o desenvolvimento e melhora a performance. No entanto também possui algumas desvantagens: o resultado final é um pouco menos fiel à saída original (geralmente mais “pontudo”) e jogos que utilizam microcódigo para alterar o funcionamento do RSP e do RDP não podem ser rodados. Existem também, então, plugins de vídeo e áudio que emulam o hardware inteiro, mas são raros e mais pesados de rodar.
+
+
+O estudo do funcionamento de um console antigo e sua emulação em software podem parecer ter pouco valor além da nostalgia e da conservação de conhecimento e formas de entretenimento para o futuro (que por si só já são razões bem válidas). Isso não é verdade, pois ele pode ser usado para mostrar como funcionam diferentes arquiteturas de computadores, a importância de hardware especializado, técnicas de engenharia reversa. Também pode tocar em pontos complexos da teoria da computação, como no caso dos recompiladores e interpretadores. Por fim do ponto de vista da engenharia de software, mostra a importância da modularização e do software livre e aberto. O estudo então cumpre sua função didática, ao mobilizar diversos conhecimentos que já possuíamos e ao nos acrescentar novos conhecimentos.
+
+
+\end{itemize}
+
+
+
 
 \pagebreak
 \begin{thebibliography}{1}
 \bibitem{vr4300-datasheet} 
 NEC V\lowtext{R}4300, V\lowtext{R}4305, V\lowtext{R}4310 64-bit 
 processor User's Manual 7$^{\text{th}}$ edition. Japan, 2000.
-\bibitem{thebibliography}Nintendo 64 Programming Manual. Digitalizado por Project Ultra 64. Acessível em: \url{http://level42.ca/projects/ultra64/Documentation/man/}
+\bibitem{nintendo}Nintendo 64 Programming Manual. Digitalizado por Project Ultra 64. Acessível em: \url{http://level42.ca/projects/ultra64/Documentation/man/}
+\bibitem{HLEwiki}Artigo na Wikipedia sobre High-Level Emulation. Acessível em: \url{https://en.wikipedia.org/wiki/High-level_emulation}
+\bibitem{emulationwiki}Artigo sobre emuladores de Nintendo 64 em uma Wiki dedicada à emulação. Acessível em: \url{http://emulation.gametechwiki.com/index.php/Nintendo_64_emulators}
+\bibitem{HLE}Esse é o caso do emulador ultraHLE, que dá nome à técnica. Em 1999, com somente 3 anos de circulação comercial do console ele conseguia rodar uma grande quantidade de jogos comerciais. Código-fonte acessível em: \url{http://www.emulation64.com/freeflow-page.html}
+\bibitem{mupenplus}Código fonte do emulador MupenPlus64 (C/C++): \url{https://github.com/mupen64plus/mupen64plus-core}
+\bibitem{rustendo}Código fonte do emulador Rustendo64 (Rust): \url{https://github.com/yupferris/rustendo64}
 \end{thebibliography}
 
 \end{document}
